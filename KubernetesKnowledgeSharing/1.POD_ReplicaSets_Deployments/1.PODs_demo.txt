@@ -1,0 +1,12 @@
+kubectl get nodes
+kubectl run nginx --impage=nginx
+kubectl get pods
+kubectl describe pods
+kubectl describe pod <pod_name>
+kubectl get pods -o wide (with pod ip and node on which it is running)
+
+kubectl exec -it <pod_name> -- sh
+apt-get update
+apt-get install curl
+curl http://pod_ip:80
+

@@ -1,0 +1,78 @@
+kubectl cluster-info
+
+kubectl get nodes
+
+kubectl run nginx --image=nginx --replicas=1
+
+kubectl get pods -o wide
+
+watch kubectl get pods
+
+kubectl expose deployment nginx --name=nginx-serice --type=loadbalancer --port=80 --target-port=80
+
+kubectl get svc
+
+kubectl delete svc nginx-service
+
+kubectl get nodes
+kubectl run nginx --image=nginx --replicas=1
+kubectl scale deploy nginx --replicas=5
+kubectl scale deploy nginx --replicas=1
+kubectl get pods -o wide
+
+kubectl get pv
+kubectl get pvc
+
+kubectl get statefulsets
+
+kubectl get secrets
+
+kubectl get replicationcontroller
+
+kubectl replace -f replicaset-definition.yml
+kubectl scale --replicas=6 -f replicaset-definition.yml
+kubectl scale -replicas=6 replicaset myapp-replicaset //specify type of object and object id
+
+kubectl delete pod pod-name
+
+kubectl cluster-info
+kubectl get nodes
+kubectl get all //get all k8s objects in k8s cluster
+
+//---------- START - ReplicataSets ---------------//
+kubectl create -f replicaset-definition.yml
+kubectl get replicaset
+kubectl delete replicaset my-replicaset
+kubectl replace -f replicaset-definition.yml
+kubectl scale --replicas=6 -f replicaset-definition.yml //will not result in number of replicas changed in the file
+kubectl scale -replicas=6 replicaset my-replicaset 
+//---------- END - ReplicataSets -----------------//
+
+//---------- START - Deployment ---------------//
+//create a deployment
+kubectl create -f deployment-definition.yml
+//get deployment details
+kubectl get deployments
+//update an existing deployment
+kubectl apply -f deployment-definition.yml
+kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1
+//Get deployment status details
+kubectl rollout status deployment/myapp-deployment
+kubectl rollout history deployment/myapp-deployment
+//rollback a deployment
+kubectl rollout undo deployment/myapp-deployment
+//scale a deployment
+kubectl scale --current-replicas=1 --replicas=3 deployment/myapp-deployment
+//------------- END - Deployment --------------//
+
+kubectl run nginx --image=nginx //This command actually creates a deployment and not just a pod
+
+//---------- START - Service ---------------//
+
+//---------- END - Service -----------------//
+
+//---------- START - Firewall Rules --------//
+gcloud compute firewall-rules create test-node-port --allow tcp:[NODE_PORT]
+gcloud compute firewall-rules delete test-node-port
+gcloud compute firewall-rules list
+//---------- END - Firewall Rules ----------//

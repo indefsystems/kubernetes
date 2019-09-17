@@ -1,0 +1,57 @@
+Replication Controllers / ReplicaSets - K8S object to scale up/down or replace single pod if fails
+ - span across multiple nodes
+ - create multiple instances of PODs - but what PODs? this infomation goes under the "template" section of spec section in yaml definition.
+ 
+ 
+ ReplicaSet - new recommended way to setup replication
+  - has additional MANDATORY "selector" section in ReplicaSet yaml definition.
+  - "selector" section is used to specify what PODs fall under it (this includes PODs mention under template section, 
+    but other PODs created earlier can also be associated with this ReplicaSet using selector section)
+  - specified in the form of "matchLabels"
+ 
+ * selector is one of the major difference b/w "Replication Controllers" and "ReplicaSets"
+ * "selector" section is NOT MANDATORY for "Replication Controllers", but available 
+   - if not specified then it assumes it to be same as the labels provided in the POD definition file
+   
+   
+WHY do we need LABELs and SELECTORs
+===================================
+ * ReplicaSet is a process that monitors PODs - maintains specified no of replicas.
+   - How ReplicaSet knows which POD to monitor, there could be 100s and 1000s of other PODs running in the cluster.
+   - This is where labeling of the POD during creation comes handy. Thse labels can be used as filters within "selector" section to associate specific PODs with RS.
+   
+Scaling Replicas
+================
+1) update replicas value and run kubectl replace -f replicaset-definition.yml
+2) kubectl scale --replicas=6 -f replicaset-definition.yml //will not result in number of replicas changed in the file
+3) kubectl scale -replicas=6 replicaset myapp-replicaset 
+* scaling can also be done based on the LOAD (advance configuration)
+
+YAML
+====
+show http://www.yamllint.com/
+
+DEMO
+=======================
+1) show 3.2.replicaset-definition.yml  in PyCharm
+2) show that selector is MANDATORY by removing it in PyCharm and showing the errors
+3) cat > replicaset-definition.yml
+4) kubectl create -f replicaset-definition.yml
+5) kubectl get replicaset myapp-replicaset
+6) kubectl describe replicaset myapp-replicaset
+7) kubectl get pods (replicaset prefixed to their name)
+8) replicaset is supposed to monitor the pods - so if any pod goes down then it should suppose to create another one
+   kubectl delete pod <pod_name>
+   kubectl get pods (to check that new pod has been created)
+9) now create an additional pod with the same labels - to show that replicaset will maintain given number of replicas
+   add new pod with same labels and replicat set should terminate this pod
+10) kubectl describe replicaset myapp-replicaset --> to show that a pod was deleted by the replicaset
+11) kubectl create -f pod-definition-rs-diff-label.yml --> this should successfully add the pod as this has different labels
+12) Modify 3.2.replicaset-definition.yml to set replicas to 6 and run 
+    kubectl replace -f 3.2.replicaset-definition.yml to scale the pods --> describe replicaset
+    kubectl get pods
+13) scale down using kubectl scale --replicas=3 -f 3.2.replicaset-definition.yml
+    kubectl get replicaset
+    kubectl get pods
+    --> number of replicas in the file are still 6 so to keep this in mind
+14) kubectl delete replicaset myapp-replicaset
