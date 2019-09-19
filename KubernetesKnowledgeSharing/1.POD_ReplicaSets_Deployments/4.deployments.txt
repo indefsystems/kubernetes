@@ -22,7 +22,7 @@ UPDATES & ROLLBACK
 
 5) There are two types of rollout strategies --> RECREATE (destroy existing and create new --> DOWNTIME), ROLLING UPDATE (default strategy - upgrade one by one so NO DOWNTIME)
 6) change depployment definition, say nginx version number to 1.17.1 and run it
-   a) kubectl apply -f deployment-definition.yml
+   a) kubectl apply -f 4.1.deployment-definition.yml
    - A new rollout is triggered and a new revision is created after the deployment
    b) kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1
    - This will not change the deployment definition file so to be mindful of this.
@@ -39,15 +39,15 @@ UPDATES & ROLLBACK
 Practice Steps
 ==============
 1) set replicas to 6
-2) kubectl create -f deployment-definition.yml
+2) kubectl create -f 4.1.deployment-definition.yml
 3) kubectl rollout status deployment/myapp-deployment
 4) kubectl rollout history deployment/myapp-deployment --> to see the revision created (But no cause mentioned, because didn't ask kubernetes to record the change)
 5) kubectl delete deployment myapp-deployment --> run again with record
-6) kubectl create -f deployment-definition.yml --record
+6) kubectl create -f 4.1.deployment-definition.yml --record
 7) kubectl rollout history deployment/myapp-deployment --> now revision has the change cause
 8) https://hub.docker.com/_/nginx
-9) change version of nginx to say 1.17 in deployment-definition.yml
-10) kubectl apply -f deployment-definition.yml --record
+9) change version of nginx to say 1.17 in 4.1.deployment-definition.yml
+10) kubectl apply -f 4.1.deployment-definition.yml --record
 11) kubectl rollout status deployment/myapp-deployment --> upgrade also initiates the rollout
 12) kubectl rollout history deployment/myapp-deployment --> SHOWS new revision
 13) kubectl get all --> new replicaset created for rollout 
