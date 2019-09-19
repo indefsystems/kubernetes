@@ -1,0 +1,75 @@
+Deployment in PRODUCTION
+ - in PRODUCTION, we will be working with deployment definition file and not pod and replicaset definition files.
+ - in production environment - we might have multiple instances of our application
+ - over time different versions of the app would need to be installed
+ - we would like to install these new versions of updates one by one rather all of a sudden - known as rolling updates
+ - if something goes wrong with the changes then we would like to roll this back
+ - If we would like to make multiple changes to our environment such as update the underlying webserver version, as well as scaling our environment and also modifying the resource allocation etc. We wouldn't want to make this change as each command is applied, instead we would like to apply pause to our environment, make all the changes, and then resume the environment so that all the changes are rolled out together.
+
+* ALL OF THESE CAPABILITIES are available with kubernetes DEPLOYMENTS.
+
+* PODS are contained within REPLICA SET which is intern contained within DEPLOYMENTS --> so DEPLOYMENT is higher level abstraction
+
+* DEPLOYMENT provides us capabilites to upgrade underlying instances seamlessly using rolling updates, undo changes and pause/resume changes as required.
+
+DEMO - part1
+============
+
+1) kubectl get all. deployment --> replicaset --> pods
+Deployment already creates a replicaset.
+2) cat > deployment-definition.yml
+3) kubectl create -f deployment-definition.yml
+4) kubectl get all
+5) kubectl describe deployment myapp-deployment --> see the events where replicaset has been scaled to number if replicas in definition file
+
+UPDATES & ROLLBACK
+===================
+1) When you first create a DEPLOYMENT, it triggers a ROLLOUT
+2) A new ROLLOUT creates a new deployment REVISION e.g. Revision 1
+3) In future when applicaiton is upgraded, a new ROLLOUT is triggered and a new deployment REVISION is created e.g. Revision 2
+4) This helps us keep track of the changes made to our DEPLOYMENTS and enables us to ROLLBACK to a previous version of deployment if necessary
+   kubectl rollout status deployment/myapp-deployment
+
+5) There are two types of rollout strategies --> RECREATE (destroy existing and create new --> DOWNTIME), ROLLING UPDATE (default strategy - upgrade one by one so NO DOWNTIME)
+6) change depployment definition, say nginx version number to 1.17.1 and run it
+   a) kubectl apply -f deployment-definition.yml
+   - A new rollout is triggered and a new revision is created after the deployment
+   b) kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1
+   - This will not change the deployment definition file so to be mindful of this.
+
+7) Under the hood, kubernetes creates a new replicaset for rolling update deployment and brings down one pod in one replicaset and brings up one pod in other replicase and that's how it proceeds with rolling update.
+   - kubectl get replicasets --> to see two different replicasets for the same deployment
+8) to undo a change
+   kubectl rollout undo deployment/myapp-deployment
+   - undo will destry the pods in NEW replicaset and will bring UP the pods in OLD replicaset.
+   - application is back to older version
+   kubectl get replicasets
+
+
+DEMO - Part 2
+=============
+1) set replicas to 6
+2) kubectl create -f deployment-definition.yml
+3) kubectl rollout status deployment/myapp-deployment
+4) kubectl rollout history deployment/myapp-deployment --> to see the revision created (But no cause mentioned, because didn't ask kubernetes to record the change)
+5) kubectl delete deployment myapp-deployment --> run again with record
+6) kubectl create -f deployment-definition.yml --record
+7) kubectl rollout history deployment/myapp-deployment --> now revision has the change cause
+8) https://hub.docker.com/_/nginx
+9) change version of nginx to say 1.17 in deployment-definition.yml
+10) kubectl apply -f deployment-definition.yml --record
+11) kubectl rollout status deployment/myapp-deployment --> upgrade also initiates the rollout
+12) kubectl rollout history deployment/myapp-deployment --> SHOWS new revision
+13) kubectl get all --> new replicaset created for rollout 
+14) kubectl describe deployment --> you can see the new image, see the events as they occurred depicting rolling update using NEW and OLD replicasets
+15) kubectl set image deployment/myapp-deployment nginx-container=nginx:1.17-perl --record
+16) kubectl rollout history deployment/myapp-deployment
+17) kubectl describe deployment --> see new image
+ROLLBACK
+18) kubectl rollout undo deployment/myapp-deployment 
+19) kubectl rollout history deployment/myapp-deployment --> Revision 2 is overwritten with revision 4 - because when we did rollback of the upgrade to revision 2, it applied same command to create new revision that we used to create revision 2, also used the same definition file. k8s keeps the record of this internally. so it takes us back to the version of container that we had for version 2
+
+
+
+
+
