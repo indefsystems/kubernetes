@@ -12,16 +12,6 @@ Deployment in PRODUCTION
 
 * DEPLOYMENT provides us capabilites to upgrade underlying instances seamlessly using rolling updates, undo changes and pause/resume changes as required.
 
-DEMO - part1
-============
-
-1) kubectl get all. deployment --> replicaset --> pods
-Deployment already creates a replicaset.
-2) cat > deployment-definition.yml
-3) kubectl create -f deployment-definition.yml
-4) kubectl get all
-5) kubectl describe deployment myapp-deployment --> see the events where replicaset has been scaled to number if replicas in definition file
-
 UPDATES & ROLLBACK
 ===================
 1) When you first create a DEPLOYMENT, it triggers a ROLLOUT
@@ -46,8 +36,8 @@ UPDATES & ROLLBACK
    kubectl get replicasets
 
 
-DEMO - Part 2
-=============
+Practice Steps
+==============
 1) set replicas to 6
 2) kubectl create -f deployment-definition.yml
 3) kubectl rollout status deployment/myapp-deployment
