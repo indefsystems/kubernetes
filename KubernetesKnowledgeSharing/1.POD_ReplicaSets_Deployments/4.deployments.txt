@@ -58,7 +58,21 @@ Practice Steps
 ROLLBACK
 18) kubectl rollout undo deployment/myapp-deployment 
 19) kubectl rollout history deployment/myapp-deployment --> Revision 2 is overwritten with revision 4 - because when we did rollback of the upgrade to revision 2, it applied same command to create new revision that we used to create revision 2, also used the same definition file. k8s keeps the record of this internally. so it takes us back to the version of container that we had for version 2
-
+SIMULATE ERROR
+20) vi deployment-definition.yml and change image to an invalid image say 1.17-err
+21) kubectl apply -f deployment-definition.yml --record
+22) kubectl rollout status deployment/myapp-deployment --> shows that rolling update is stuck
+23) kubectl get deployments --> note desired/current counts --> its in a different state than normal
+24) kubectl get pods --> 5 running and 3 in ImagePullBackOff status - so whats happened here?
+    - deployment object tried to terminate 1 old instance of working version - brining down total running version to 5
+	- tried to create 3 instance of new version - however image is not correct - status ImagePullBackOff - unable to pull image from docker hub
+	- since it is unable to deploy any of the 3 pods, kubernetes proactively stopped proceeding with the upgrade leading to current state.
+	- proactively stopped terminaling the old PODs from old replicaset - because it knew if it tried to terminal old PODs then user would be affected as the new image doesn't seem to work. So it proactively stopped the upgrade
+25) kubectl rollout history deployment/myapp-deployment
+26) kubectl rollout undo deployment/myapp-deployment 
+27) kubectl rollout history deployment/myapp-deployment --> new revision 6 which is same as old revision 4 which is same as revision 2
+28) kubectl describe deployment --> back to image used for revision 2
+29) kubectl get pods --> all pods are running
 
 
 
