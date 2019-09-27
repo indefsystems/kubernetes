@@ -38,7 +38,7 @@ UPDATES & ROLLBACK
 
 Practice Steps
 ==============
-1) set replicas to 6
+1) set replicas to 6 (not mandatory)
 2) kubectl create -f 4.1.deployment-definition.yml
 3) kubectl rollout status deployment/myapp-deployment
 4) kubectl rollout history deployment/myapp-deployment --> to see the revision created (But no cause mentioned, because didn't ask kubernetes to record the change)
