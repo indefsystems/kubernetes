@@ -59,8 +59,8 @@ ROLLBACK
 18) kubectl rollout undo deployment/myapp-deployment 
 19) kubectl rollout history deployment/myapp-deployment --> Revision 2 is overwritten with revision 4 - because when we did rollback of the upgrade to revision 2, it applied same command to create new revision that we used to create revision 2, also used the same definition file. k8s keeps the record of this internally. so it takes us back to the version of container that we had for version 2
 SIMULATE ERROR
-20) vi deployment-definition.yml and change image to an invalid image say 1.17-err
-21) kubectl apply -f deployment-definition.yml --record
+20) Use 4.3.deployment-definition.yml using an invalid image nginx:1.17-err
+21) kubectl apply -f 4.3.deployment-definition.yml --record
 22) kubectl rollout status deployment/myapp-deployment --> shows that rolling update is stuck
 23) kubectl get deployments --> note desired/current counts --> its in a different state than normal
 24) kubectl get pods --> 5 running and 3 in ImagePullBackOff status - so whats happened here?
