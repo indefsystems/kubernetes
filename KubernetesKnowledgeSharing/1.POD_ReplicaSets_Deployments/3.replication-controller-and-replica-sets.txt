@@ -50,8 +50,9 @@ DEMO
 12) Modify 3.2.replicaset-definition.yml to set replicas to 6 and run 
     kubectl replace -f 3.2.replicaset-definition.yml to scale the pods --> describe replicaset
     kubectl get pods
-13) scale down using kubectl scale --replicas=3 -f 3.2.replicaset-definition.yml
+13) scale down using kubectl scale --replicas=3 -f 3.2.replicaset-definition.yml OR kubectl scale --replicas=3 replicaset myapp-replicaset
     kubectl get replicaset
     kubectl get pods
     --> number of replicas in the file are still 6 so to keep this in mind
+	--> replicas can be scaled up and down based on the load as well (advance topic)
 14) kubectl delete replicaset myapp-replicaset
