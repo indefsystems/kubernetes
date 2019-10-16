@@ -1,0 +1,23 @@
+# create a namespace to install ingress-controller
+kubectl create namespace ingress-space
+
+# The NGINX	Ingress Controller requires a ConfigMap object. Create a ConfigMap object in ingress-space
+kubectl create configmap nginx-configuration --namespace ingress-space
+
+# The NGINX Ingress Controller requires a ServiceAccount. Create a ServiceAccount in the ingress-space
+kubectl create serviceaccount ingress-serviceaccount --namespace ingress-space
+
+# How to create Roles and RoleBindings for the ServiceAccount
+??
+kubectl get roles,rolebindings --namespace ingress-space
+
+# deploy ingress-controller
+kubectl create -f ingress-controller.yml
+
+# create a service to make Ingress available to the external users
+kubectl expose deployment -n ingress-space ingress-controller --type=NodePort --port=80 --name=ingress --dry-run -o yaml > ingress.yaml
+or
+kubectl create -f ingress-service.yml
+
+# create the ingress resource to make the applications available at /wear and /watch on the Ingress service
+kubectl create -f ingress-resource.yml

@@ -35,8 +35,7 @@ DEMO
 =======================
 1) show 3.2.replicaset-definition.yml  in PyCharm
 2) show that selector is MANDATORY by removing it in PyCharm and showing the errors
-3) cat > replicaset-definition.yml
-4) kubectl create -f replicaset-definition.yml
+4) kubectl create -f 3.2.replicaset-definition.yml
 5) kubectl get replicaset myapp-replicaset
 6) kubectl describe replicaset myapp-replicaset
 7) kubectl get pods (replicaset prefixed to their name)
@@ -45,8 +44,9 @@ DEMO
    kubectl get pods (to check that new pod has been created)
 9) now create an additional pod with the same labels - to show that replicaset will maintain given number of replicas
    add new pod with same labels and replicat set should terminate this pod
+   kubectl create -f 3.3.pod-definition-rs.yml
 10) kubectl describe replicaset myapp-replicaset --> to show that a pod was deleted by the replicaset
-11) kubectl create -f pod-definition-rs-diff-label.yml --> this should successfully add the pod as this has different labels
+11) kubectl create -f 3.4.pod-definition-rs-diff-label.yml --> this should successfully add the pod as this has different labels
 12) Modify 3.2.replicaset-definition.yml to set replicas to 6 and run 
     kubectl replace -f 3.2.replicaset-definition.yml to scale the pods --> describe replicaset
     kubectl get pods
