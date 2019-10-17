@@ -10,7 +10,7 @@ Deployment in PRODUCTION
 
 * PODS are contained within REPLICA SET which is intern contained within DEPLOYMENTS --> so DEPLOYMENT is higher level abstraction
 
-* DEPLOYMENT provides us capabilites to upgrade underlying instances seamlessly using rolling updates, undo changes and pause/resume changes as required.
+* DEPLOYMENT provides us with capabilites to upgrade underlying instances seamlessly using rolling updates, undo changes and pause/resume changes as required.
 
 UPDATES & ROLLBACK
 ===================
@@ -31,7 +31,7 @@ UPDATES & ROLLBACK
    - kubectl get replicasets --> to see two different replicasets for the same deployment
 8) to undo a change
    kubectl rollout undo deployment/myapp-deployment
-   - undo will destry the pods in NEW replicaset and will bring UP the pods in OLD replicaset.
+   - undo will destroy the pods in NEW replicaset and will bring UP the pods in OLD replicaset.
    - application is back to older version
    kubectl get replicasets
 
@@ -56,7 +56,9 @@ Practice Steps
 16) kubectl rollout history deployment/myapp-deployment
 17) kubectl describe deployment --> see new image
 ROLLBACK
-18) kubectl rollout undo deployment/myapp-deployment 
+18) kubectl rollout undo deployment/myapp-deployment
+    -> if you want to rollback to a specific revision then use following command
+    kubectl rollout undo deployment/myapp-deployment --to-revision=<revision_number> e.g kubectl rollout undo deployment/myapp-deployment --to-revision=2
 19) kubectl rollout history deployment/myapp-deployment --> Revision 2 is overwritten with revision 4 - because when we did rollback of the upgrade to revision 2, it applied same command to create new revision that we used to create revision 2, also used the same definition file. k8s keeps the record of this internally. so it takes us back to the version of container that we had for version 2
 SIMULATE ERROR
 20) Use 4.3.deployment-definition.yml using an invalid image nginx:1.17-err
