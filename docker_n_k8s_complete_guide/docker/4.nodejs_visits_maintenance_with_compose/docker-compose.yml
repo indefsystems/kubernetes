@@ -1,0 +1,9 @@
+version: '3'
+services: 
+  redis-server:
+    image: 'redis'
+  node-app:
+    restart: on-failure
+    build: . # use a Dockerfile in the current directory to build the image
+    ports:
+      - "4001:8081" #localmachine:container

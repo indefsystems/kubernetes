@@ -1,0 +1,6 @@
+//to map volume to the source code folder so that changes in local development environment can be seen within the container during development
+
+docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app <image_id>
+
+//in windows
+docker run -p 3000:3000 -v /app/node_modules -v pwd:/app <image_id>

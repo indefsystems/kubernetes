@@ -1,0 +1,11 @@
+# Specify a base image
+# alpine is a term in docker world for an image which is as small and compact as possible
+# alpine version of an image means most strip down version of the image possible
+# node:apline image will have just the node and nothing else, and just basic programs like ping or cat etc...
+FROM node:alpine
+
+# Install dependencies
+RUN npm install
+
+# Default command
+CMD ["npm","start"]
