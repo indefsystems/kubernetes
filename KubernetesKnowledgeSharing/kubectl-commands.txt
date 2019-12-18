@@ -76,3 +76,8 @@ gcloud compute firewall-rules create test-node-port --allow tcp:[NODE_PORT]
 gcloud compute firewall-rules delete test-node-port
 gcloud compute firewall-rules list
 //---------- END - Firewall Rules ----------//
+
+// --------- Persistent Volume Claims ------//
+kubectl get storageclass
+kubectl describe storageclass
+
