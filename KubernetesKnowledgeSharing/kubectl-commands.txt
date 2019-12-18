@@ -72,12 +72,19 @@ kubectl run nginx --image=nginx //This command actually creates a deployment and
 //---------- END - Service -----------------//
 
 //---------- START - Firewall Rules --------//
-gcloud compute firewall-rules create test-node-port --allow tcp:[NODE_PORT]
+gcloud compute firewall-rules create test-node-port --allow tcp:NODE_PORT
 gcloud compute firewall-rules delete test-node-port
 gcloud compute firewall-rules list
 //---------- END - Firewall Rules ----------//
 
-// --------- Persistent Volume Claims ------//
+// --------- START - Persistent Volume Claims ------//
 kubectl get storageclass
 kubectl describe storageclass
+kubectl get pv
+kubectl get pvc
+// --------- END - Persistent Volume Claims ------//
 
+kubectl create secret generic <secret_name> --from-literal key=value
+kubectl create secret docker-registry ...
+kubectl create secret tls ...
+kubectl get secrets
