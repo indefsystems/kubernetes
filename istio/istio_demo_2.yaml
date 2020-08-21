@@ -1,0 +1,36 @@
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: a-set-of-routing-rules-we-can-call-this-anything  
+  namespace: default
+spec:
+  hosts:
+    - fleetman-staff-service.default.svc.cluster.local  
+  http:
+    - route:
+        - destination:
+            host: fleetman-staff-service.default.svc.cluster.local 
+            subset: all-staff-service-pods 
+---
+kind: DestinationRule       
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: grouping-rules-for-our-photograph-canary-release 
+  namespace: default
+spec:
+  host: fleetman-staff-service.default.svc.cluster.local 
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpHeaderName: "x-myval"
+  subsets:
+    - labels:   
+        app: staff-service 
+      name: all-staff-service-pods
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: vs-config-for-fleetman-staff-service
+  namespace: default
+spec:
+  hosts:
+    - fleetman-staff-service.default.svc.cluster.local
+  http:
+    - route:
+        - destination:
+            host: fleetman-staff-service.default.svc.cluster.local
+            subset: without-image-dest
+          weight: 90
+        - destination:
+            host: fleetman-staff-service.default.svc.cluster.local
+            subset: with-image-dest
+          weight: 10
+---
+kind: DestinationRule
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: fleetman-staff-service-istio-lb-config
+  namespace: default
+spec:
+  host: fleetman-staff-service.default.svc.cluster.local
+  subsets:
+    - labels:
+        version: without-image
+      name: without-image-dest
+    - labels:
+        version: with-image
+      name: with-image-dest
